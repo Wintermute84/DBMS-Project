@@ -17,25 +17,7 @@ const db = new sqlite3.Database('./database.db', (err) => {
 
 // API route to get all products
 app.get('/products', (req, res) => {
-  db.all(`SELECT * FROM products`, [], (err, rows) => {
-    if (err) {
-      res.status(400).json({ error: err.message });
-      return;
-    }
-    res.json({
-      message: "success",
-      data: rows
-    });
-  });
-});
-
-app.get('/cart/:user_name', (req, res) => {
-  const userName = req.params.user_name;
-  db.all(`SELECT products.id, products.name, products.price, products.description
-    FROM products
-    JOIN cart ON products.id = cart.id
-    WHERE cart.user_name = ?;
-    `, [userName], (err, rows) => {
+  db.all('SELECT * FROM products', [], (err, rows) => {
     if (err) {
       res.status(400).json({ error: err.message });
       return;

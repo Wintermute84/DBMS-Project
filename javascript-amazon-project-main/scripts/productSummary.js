@@ -1,13 +1,17 @@
  // Function to fetch products from the backend API
+ import { renderProductsGrid } from "../data/products.js";
+ let product = [];
+
  function fetchProducts() {
-  fetch('http://localhost:3000/products') // Make a request to the backend
+    fetch('http://localhost:3000/products') // Make a request to the backend
       .then(response => response.json())  // Parse the response as JSON
       .then(data => {
-          console.log(data); // Log the entire response to inspect it
-
+          product = data.data;
+          renderProductsGrid(product); // Log the entire response to inspect it
           // Check if data.data exists
-          if (data.data) {
-              const productList = document.getElementById('product-list');
+         /* if (data.data) {
+              product = data.data;
+             const productList = document.getElementById('product-list');
 
               // Clear any existing products
               productList.innerHTML = '';
@@ -24,16 +28,17 @@
                       <img src=${product.image}>
                   `;
 
-                  productList.appendChild(productDiv);
+                  productList.appendChild(productDiv)
               });
           } else {
               console.error('Error: No data field in response');
-          }
+          }*/
       })
       .catch(error => {
           console.error('Error fetching products:', error);
       });
 }
+
 
 function fetchCart(userName) {
   fetch(`http://localhost:3000/cart/${userName}`) // Make a request to the backend
@@ -55,4 +60,4 @@ function fetchCart(userName) {
 
 
   // Call the function to fetch products when the page loads
- window.onload = fetchCart('midhun');
+ window.onload = fetchProducts();
