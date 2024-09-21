@@ -55,6 +55,36 @@ app.post('/cart', (req, res) => {
   });
 });
 
+//get users cart
+app.get('/cart', (req, res) => {
+  const user = req.query.user;
+
+  if (!user) {
+      return res.status(400).json({ error: 'User name is required' });
+  }
+
+  const query = `SELECT cart.id, products.name, products.price, cart.qty ,products.image
+                 FROM cart 
+                 JOIN products ON cart.pid = products.id 
+                 WHERE cart.user_name = ?`;
+
+  db.all(query, [user], (err, rows) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      if (rows.length === 0) {
+          return res.json({ message: 'No items in the cart', data: [] });
+      }
+
+      res.json({
+          message: 'success',
+          data: rows
+      });
+  });
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
