@@ -110,7 +110,7 @@ export function renderCart(CartItems, formatCurrency) {
 }
 
 export function fetchCart(userName, formatCurrency) {
-    fetch(`http://localhost:3000/cart?user=${userName}`)
+    const promise = fetch(`http://localhost:3000/cart?user=${userName}`)
         .then(response => response.json())
         .then(data => {
             if (data.message === 'success') {
@@ -119,14 +119,14 @@ export function fetchCart(userName, formatCurrency) {
                 if (data.data.length === 0) {
                     console.log('Your cart is empty');
                 } else {
-                    let cartHtml = renderCart(data.data, formatCurrency);
-                    document.querySelector('.js-order-summary').innerHTML = cartHtml;
+                    return data.data;
                 }
             } else {
                 console.error('Error fetching cart:', data.message);
             }
         })
         .catch(error => console.error('Error fetching cart:', error));
+    return promise;
 }
 
 export function calculateCartQuantity(userName){
