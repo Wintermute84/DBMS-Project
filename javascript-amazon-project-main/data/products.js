@@ -1,3 +1,5 @@
+import { calculateCartQuantity } from "./cart.js";
+
 export function renderProductsGrid(products, formatCurrency, addToCart){
   console.log(products);
   let html = '';
@@ -57,10 +59,11 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
     .forEach((button)=>{
       let addedMessageTimeoutId;
       button.addEventListener('click', () => {
+        new Promise((resolve) => {
           const productId = parseInt(button.dataset.productId);
+          const quantity = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value);
+          console.log(quantity);
           console.log(typeof(productId));
-          addToCart(productId);
-
           const addedBtn = document.querySelector(`.js-added-to-cart-${productId}`);
           addedBtn.classList.add('added-to-cart-visible');
           if(addedMessageTimeoutId){
@@ -69,10 +72,44 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
 
         const messageTimeoutId = setTimeout(()=>{
           addedBtn.classList.remove('added-to-cart-visible');
-        },2000);
+        },800);
 
-        addedMessageTimeoutId = messageTimeoutId;  
+        addedMessageTimeoutId = messageTimeoutId; 
+        const details = {
+          productId : productId,
+          quantity : quantity
+        }
+        setTimeout(()=>{
+          resolve(details);
+        },800);; 
+        }).then((details)=>{
+          let productId = details.productId;
+          let quantity = details.quantity;
+          console.log(productId,quantity);
+          addToCart(productId,quantity);
+        });
+          
     });
   });
 
 }
+
+
+export class Product {
+  id;
+  image;
+  name;
+  price;
+  seller;
+
+  constructor(productDetails){
+    this.id = productDetails.id;
+    this.image = productDetails.image;
+    this.name = productDetails.name;
+    this.price = productDetails.price
+    this.seller = productDetails.seller;
+  }
+
+}
+
+export let products = [];

@@ -32,28 +32,62 @@ app.get('/products', (req, res) => {
 });
 
 // API route to place users cart
-app.post('/cart', (req, res) => {
+app.post('/addToCart', (req, res) => {
   const { productId, user, qty } = req.body;
 
-  const query = `INSERT INTO cart (pid, user_name, qty) VALUES (?, ?, ?)`;
+  // First, check if the product already exists in the cart for the user
+  const selectQuery = `SELECT qty FROM cart WHERE pid = ? AND user_name = ?`;
   
-  db.run(query, [productId, user, qty], function(err) {
-      if (err) {
+  db.get(selectQuery, [productId, user], (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    if (row) {
+      // Product already exists, update the quantity
+      const updatedQty = row.qty + qty;
+      const updateQuery = `UPDATE cart SET qty = ? WHERE pid = ? AND user_name = ?`;
+      
+      db.run(updateQuery, [updatedQty, productId, user], function(err) {
+        if (err) {
           res.status(400).json({ error: err.message });
           return;
-      }
+        }
 
-      res.json({
+        res.json({
           message: 'success',
           data: {
-              productId: productId,
-              user: user,
-              qty: qty
+            productId: productId,
+            user: user,
+            qty: updatedQty
+          }
+        });
+      });
+    } else {
+      // Product doesn't exist, insert it into the cart
+      const insertQuery = `INSERT INTO cart (pid, user_name, qty) VALUES (?, ?, ?)`;
+      
+      db.run(insertQuery, [productId, user, qty], function(err) {
+        if (err) {
+          res.status(400).json({ error: err.message });
+          return;
+        }
+
+        res.json({
+          message: 'success',
+          data: {
+            productId: productId,
+            user: user,
+            qty: qty
           },
           id: this.lastID
+        });
       });
+    }
   });
 });
+
 
 //get users cart
 app.get('/cart', (req, res) => {
@@ -81,6 +115,65 @@ app.get('/cart', (req, res) => {
           message: 'success',
           data: rows
       });
+  });
+});
+
+//get cart quantity
+app.get('/cartquantity', (req, res) => {
+  const user = req.query.user;
+  if (!user) {
+      return res.status(400).json({ error: 'User name is required' });
+  }
+  const query = `SELECT sum(qty) as cartQty
+                 FROM cart  
+                 WHERE user_name = ?`;
+
+  db.all(query, [user], (err, rows) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      if (rows.length === 0) {
+          return res.json({ message: 'No items in the cart', data: [] });
+      }
+
+      res.json({
+          message: 'success',
+          data: rows
+      });
+  });
+});
+
+//update quantity of product if already existing in user cart
+app.post('/cartupdatequantity', (req, res) => {
+  const { productId, user, qty } = req.body;
+  const selectQuery = `SELECT qty FROM cart WHERE user_name = ? AND pid = ?`;
+  db.get(selectQuery, [user, productId], (err, row) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      if (row) {
+          const newQty = row.qty + qty;
+          const updateQuery = `UPDATE cart SET qty = ? WHERE user_name = ? AND pid = ?`;
+
+          db.run(updateQuery, [newQty, user, productId], function(err) {
+              if (err) {
+                  return res.status(400).json({ error: err.message });
+              }
+
+              res.json({
+                  message: 'success',
+                  data: {
+                      productId: productId,
+                      user: user,
+                      qty: newQty
+                  },
+                  id: this.lastID
+              });
+          });
+      } else {
+          res.status(404).json({ error: 'Product not found in cart' });
+      }
   });
 });
 

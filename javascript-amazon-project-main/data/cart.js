@@ -1,7 +1,6 @@
-export function addToCart(productId) {
-  const user = 'johndoe'; // Replace with dynamic user data if needed
-  const qty = 1; // Default quantity for now
-  fetch('http://localhost:3000/cart', {
+export function addToCart(productId, quantity) {
+  const user = 'johndoe'; // need to use getItem
+  fetch('http://localhost:3000/addToCart', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
@@ -9,15 +8,15 @@ export function addToCart(productId) {
       body: JSON.stringify({
           productId: productId,
           user: user,
-          qty: qty
+          qty: quantity
       })
   })
   .then(response => response.json())
   .then(data => {
       if (data.message === 'success') {
-          alert('Product added to cart!');
+          console.log('Product added to cart!');
       } else {
-          alert('Failed to add product to cart');
+          console.log('Failed to add product to cart');
       }
   })
   .catch(error => console.error('Error adding product to cart:', error));
@@ -117,22 +116,10 @@ export function fetchCart(userName, formatCurrency) {
                 console.log(data);
 
                 if (data.data.length === 0) {
-                    cartList.innerHTML = '<p>Your cart is empty</p>';
+                    console.log('Your cart is empty');
                 } else {
                     let cartHtml = renderCart(data.data, formatCurrency);
                     document.querySelector('.js-order-summary').innerHTML = cartHtml;
-                    /*data.data.forEach(item => {
-                        const cartItemDiv = document.createElement('div');
-                        cartItemDiv.classList.add('cart-item');
-
-                        cartItemDiv.innerHTML = `
-                            <h2>${item.name}</h2>
-                            <p>Price: $${item.price}</p>
-                            <p>Quantity: ${item.qty}</p>
-                        `;
-
-                        cartList.appendChild(cartItemDiv);
-                    });*/
                 }
             } else {
                 console.error('Error fetching cart:', data.message);
@@ -141,6 +128,48 @@ export function fetchCart(userName, formatCurrency) {
         .catch(error => console.error('Error fetching cart:', error));
 }
 
-// Call the function to fetch the cart when the page loads
+export function calculateCartQuantity(userName){
+    fetch(`http://localhost:3000/cartquantity?user=${userName}`)
+      .then(response => response.json())
+      .then(data => {
+          if (data.message === 'success') {
+              console.log(data);
 
+              if (data.data.length === 0) {
+                  console.log('Your cart is empty');
+              } else {
+                  console.log(data.data[0].cartQty);
+                  let cartQuantity = data.data[0].cartQty||0;
+                  document.querySelector('.js-cart-quantity').innerHTML = `${cartQuantity}`;
+              }
+          } else {
+              console.error('Error fetching cart:', data.message);
+          }
+      })
+      .catch(error => console.error('Error fetching cart:', error));
+}
+
+export function updateCartQuantityExistingProduct(productId, quantity){
+  const user = 'johndoe'; // need to use getItem
+  fetch('http://localhost:3000/cartupdatequantity', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          productId: productId,
+          user: user,
+          qty: quantity
+      })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.message === 'success') {
+          console.log('Product quantity updated!');
+      } else {
+          console.log('Failed to update product quantity');
+      }
+  })
+  .catch(error => console.error('Error updating product quantity', error));
+}
 
