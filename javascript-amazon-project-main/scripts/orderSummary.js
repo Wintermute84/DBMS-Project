@@ -1,11 +1,14 @@
+import { getDeliveryOption } from "../data/deliveryOptions.js";
+
+
 export function renderPaymentSummary(cart, formatCurrency){
   let productPriceCents = 0;
   let shippingCosts = 0;
   let quantity = 0;
   cart.forEach((cartItem) => {    
       productPriceCents += cartItem.price * cartItem.qty;
-     // const deliveryOption = 500; need to make delivery options work later
-      shippingCosts += 500;
+      const deliveryOption = getDeliveryOption(cartItem.deliveryoptionid);
+      shippingCosts += deliveryOption.priceCents;
       quantity += cartItem.qty;
   });
       const totalBeforeTaxCents = productPriceCents + shippingCosts ;

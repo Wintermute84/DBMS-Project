@@ -1,3 +1,7 @@
+import { deliveryOptions, getDeliveryOption } from "./deliveryOptions.js";
+import { calculateDate} from "./utils/date.js";
+import { loadCheckoutPage } from "../scripts/checkout.js";
+
 export function addToCart(productId, quantity) {
   const user = 'johndoe'; // need to use getItem
   fetch('http://localhost:3000/addToCart', {
@@ -27,11 +31,15 @@ export function addToCart(productId, quantity) {
 export function renderCart(CartItems, formatCurrency) {
     let html = ``;
     CartItems.forEach((item)=>{
+      const deliveryOptionId = item.deliveryoptionid;
+      const deliveryOption = getDeliveryOption(deliveryOptionId);
+      console.log(deliveryOption);
+      const dateString = calculateDate(deliveryOption);
       console.log(item);
         html +=`
         <div class="cart-item-container">
             <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+              Delivery date: ${dateString}
             </div>
 
             <div class="cart-item-details-grid">
@@ -47,12 +55,16 @@ export function renderCart(CartItems, formatCurrency) {
                 </div>
                 <div class="product-quantity">
                   <span>
-                    Quantity: <span class="quantity-label">${item.qty}</span>
+                    Quantity: <span class="quantity-label js-quantity-label-${item.id}">${item.qty}</span>
                   </span>
-                  <span class="update-quantity-link link-primary">
+                  <span class="update-quantity-link link-primary
+                  js-update-link" data-product-id="${item.id}">
                     Update
                   </span>
-                  <span class="delete-quantity-link link-primary">
+                  <input name="save-quantity-input" class="quantity-input js-save-quantity-input-${item.id}">
+                  <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id="${item.id}">Save</span>
+                  <span class="delete-quantity-link link-primary
+                  js-delete-link" data-product-id="${item.id}">
                     Delete
                   </span>
                 </div>
@@ -62,51 +74,85 @@ export function renderCart(CartItems, formatCurrency) {
                 <div class="delivery-options-title">
                   Choose a delivery option:
                 </div>
-                <div class="delivery-option">
-                  <input type="radio" checked
-                    class="delivery-option-input"
-                    name="delivery-option-${item.id}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Tuesday, June 21
-                    </div>
-                    <div class="delivery-option-price">
-                      FREE Shipping
-                    </div>
-                  </div>
-                </div>
-                <div class="delivery-option">
-                  <input type="radio"
-                    class="delivery-option-input"
-                    name="delivery-option-${item.id}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Wednesday, June 15
-                    </div>
-                    <div class="delivery-option-price">
-                      $4.99 - Shipping
-                    </div>
-                  </div>
-                </div>
-                <div class="delivery-option">
-                  <input type="radio"
-                    class="delivery-option-input"
-                    name="delivery-option-${item.id}">
-                  <div>
-                    <div class="delivery-option-date">
-                      Monday, June 13
-                    </div>
-                    <div class="delivery-option-price">
-                      $9.99 - Shipping
-                    </div>
-                  </div>
-                </div>
+                ${deliveryOptionsHTML(item)}
               </div>
             </div>
           </div>    
         `;
     });
+
+    document.querySelector('.js-order-summary').innerHTML = html;
+
+    function deliveryOptionsHTML(cartItem) {
+      let html = '';
+      deliveryOptions.forEach((deliveryOption)=>{
+        const dateString = calculateDate(deliveryOption);
+        const priceString = deliveryOption.priceCents === 0 ? 'FREE'
+          : `$${formatCurrency(deliveryOption.priceCents)} - `;
+        console.log(cartItem.deliveryoptionid);
+      const isChecked = deliveryOption.id == cartItem.deliveryoptionid ? 'checked' : '';
+      console.log(deliveryOption.id, cartItem.deliveryoptionid);
+    
+        html += 
+        `
+          <div class="delivery-option js-delivery-option"
+          data-product-id="${cartItem.id}"
+          data-delivery-option-id="${deliveryOption.id}">
+            <input type="radio" ${isChecked}
+              class="delivery-option-input"
+              name="delivery-option-${cartItem.id}">
+            <div>
+              <div class="delivery-option-date">
+                ${dateString}
+              </div>
+              <div class="delivery-option-price">
+                ${priceString} Shipping
+              </div>
+            </div>
+          </div>
+          `
+      });
     return html;
+    }
+
+
+    document.querySelectorAll('.js-delivery-option').forEach((element) => {
+      element.addEventListener('click', () => {
+        const productId = parseInt(element.getAttribute('data-product-id'));
+        const deliveryOptionId = parseInt(element.getAttribute('data-delivery-option-id'));
+        
+        updateCartDeliveryOption(productId, deliveryOptionId);
+        //loadCheckoutPage();
+      });
+    });
+    
+    function updateCartDeliveryOption(productId, deliveryOptionId) {
+      const user = 'johndoe';
+      console.log(productId, deliveryOptionId);
+      fetch('http://localhost:3000/updateDeliveryOption', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          productId: productId,
+          user: user,
+          deliveryoptionid: deliveryOptionId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.message === 'success') {
+          console.log('Delivery option updated successfully!');
+        } else {
+          console.log('Failed to update delivery option');
+        }
+      })
+      .catch(error => console.error('Error updating delivery option:', error));
+    }
+    
+  
 }
 
 export function fetchCart(userName, formatCurrency) {

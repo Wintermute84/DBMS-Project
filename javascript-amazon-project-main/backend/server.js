@@ -33,7 +33,7 @@ app.get('/products', (req, res) => {
 
 // API route to place users cart
 app.post('/addToCart', (req, res) => {
-  const { productId, user, qty } = req.body;
+  const { productId, user, qty} = req.body;
 
   // First, check if the product already exists in the cart for the user
   const selectQuery = `SELECT qty FROM cart WHERE pid = ? AND user_name = ?`;
@@ -97,7 +97,7 @@ app.get('/cart', (req, res) => {
       return res.status(400).json({ error: 'User name is required' });
   }
 
-  const query = `SELECT cart.id, products.name, products.price, cart.qty ,products.image
+  const query = `SELECT cart.id, products.name, products.price, cart.qty ,products.image,cart.deliveryoptionid
                  FROM cart 
                  JOIN products ON cart.pid = products.id 
                  WHERE cart.user_name = ?`;
@@ -174,6 +174,29 @@ app.post('/cartupdatequantity', (req, res) => {
       } else {
           res.status(404).json({ error: 'Product not found in cart' });
       }
+  });
+});
+
+//updates the delivery option
+app.post('/updateDeliveryOption', (req, res) => {
+  const { productId, user, deliveryoptionid } = req.body;
+
+  const updateQuery = `UPDATE cart SET deliveryoptionid = ? WHERE id = ? AND user_name = ?`;
+
+  db.run(updateQuery, [deliveryoptionid, productId, user], function(err) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'success',
+      data: {
+        pid: productId,
+        user: user,
+        deliveryoptionid: deliveryoptionid
+      }
+    });
   });
 });
 

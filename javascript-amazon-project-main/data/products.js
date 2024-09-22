@@ -72,7 +72,7 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
 
         const messageTimeoutId = setTimeout(()=>{
           addedBtn.classList.remove('added-to-cart-visible');
-        },800);
+        },300);
 
         addedMessageTimeoutId = messageTimeoutId; 
         const details = {
@@ -81,7 +81,7 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
         }
         setTimeout(()=>{
           resolve(details);
-        },800);; 
+        },400);; 
         }).then((details)=>{
           let productId = details.productId;
           let quantity = details.quantity;
