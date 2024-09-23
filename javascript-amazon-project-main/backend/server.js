@@ -200,6 +200,26 @@ app.post('/updateDeliveryOption', (req, res) => {
   });
 });
 
+//deletes a cart item
+app.post('/deleteCartItem', (req, res) => {
+  const { id, user } = req.body;
+
+  const deleteQuery = `DELETE from cart WHERE id = ? AND user_name = ?`;
+
+  db.run(deleteQuery, [id, user], function(err) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'success',
+      data: {
+        user: user
+      }
+    });
+  });
+});
 
 // Start the server
 app.listen(port, () => {

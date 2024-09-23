@@ -119,12 +119,45 @@ export function renderCart(CartItems, formatCurrency) {
     document.querySelectorAll('.js-delivery-option').forEach((element) => {
       element.addEventListener('click', () => {
         const productId = parseInt(element.getAttribute('data-product-id'));
-        const deliveryOptionId = parseInt(element.getAttribute('data-delivery-option-id'));
-        
+        const deliveryOptionId = parseInt(element.getAttribute('data-delivery-option-id'));        
         updateCartDeliveryOption(productId, deliveryOptionId);
-        //loadCheckoutPage();
       });
     });
+
+    document.querySelectorAll('.js-delete-link')
+  .forEach((link)=>{
+      link.addEventListener('click',()=>{
+        const cartId = link.dataset.productId;
+        deleteCartItem(cartId);
+        });
+    });
+
+
+    function deleteCartItem(cartId) { //need to add username
+      const user = 'johndoe';
+      fetch('http://localhost:3000/deleteCartItem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: cartId,
+          user: user,
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.message === 'success') {
+          console.log('Item deleted successfully!');
+        } else {
+          console.log('Failed to delete item');
+        }
+      })
+      .catch(error => console.error('Error deleting item:', error));
+    }
+
+    
     
     function updateCartDeliveryOption(productId, deliveryOptionId) {
       const user = 'johndoe';
