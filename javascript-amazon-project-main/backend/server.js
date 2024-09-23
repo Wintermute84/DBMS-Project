@@ -221,6 +221,28 @@ app.post('/deleteCartItem', (req, res) => {
   });
 });
 
+//update the quantity of a cart item
+app.post('/updateCartQuantity', (req, res) => {
+  const { id, user, quantity } = req.body;
+
+  const updateQuery = `UPDATE cart set qty = ? WHERE id = ? AND user_name = ?`;
+
+  db.run(updateQuery, [quantity, id, user], function(err) {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      message: 'success',
+      data: {
+        user: user,
+        quantity: quantity
+      }
+    });
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

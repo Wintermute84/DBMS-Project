@@ -37,7 +37,7 @@ export function renderCart(CartItems, formatCurrency) {
       const dateString = calculateDate(deliveryOption);
       console.log(item);
         html +=`
-        <div class="cart-item-container">
+        <div class="cart-item-container js-cart-item-container-${item.id}">
             <div class="delivery-date">
               Delivery date: ${dateString}
             </div>
@@ -132,6 +132,34 @@ export function renderCart(CartItems, formatCurrency) {
         });
     });
 
+    document.querySelectorAll('.js-update-link')
+    .forEach((link)=>{
+        link.addEventListener('click',()=>{
+        const productId = link.dataset.productId;
+        document.querySelector(`.js-save-quantity-input-${productId}`).value = '';
+        const item = document.querySelector(`.js-cart-item-container-${productId}`);
+        console.log(item);
+        item.classList.add('is-editing-quantity');
+        });
+      });
+
+      document.querySelectorAll('.js-save-quantity-link')
+      .forEach((link)=>{
+        link.addEventListener('click',()=>{
+          const productId = link.dataset.productId;
+          const quantity = parseInt(document.querySelector(`.js-save-quantity-input-${productId}`).value);
+          console.log(quantity);
+          const item = document.querySelector(`.js-cart-item-container-${productId}`);
+          item.classList.remove('is-editing-quantity');
+          if(quantity<=0 || isNaN(quantity) ){
+            alert('Quantity cannot be zero or negative!!');
+          }
+          else{
+            updateCartQuantity(productId,quantity);
+            document.querySelector(`.js-quantity-label-${productId}`).innerHTML = quantity;
+          }
+        });
+      }); 
 
     function deleteCartItem(cartId) { //need to add username
       const user = 'johndoe';
@@ -143,6 +171,31 @@ export function renderCart(CartItems, formatCurrency) {
         body: JSON.stringify({
           id: cartId,
           user: user,
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.message === 'success') {
+          console.log('Item deleted successfully!');
+        } else {
+          console.log('Failed to delete item');
+        }
+      })
+      .catch(error => console.error('Error deleting item:', error));
+    }
+
+    function updateCartQuantity(cartId, quantity) { //need to add username
+      const user = 'johndoe';
+      fetch('http://localhost:3000/updateCartQuantity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: cartId,
+          user: user,
+          quantity: quantity
         })
       })
       .then(response => response.json())
