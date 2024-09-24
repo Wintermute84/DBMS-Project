@@ -1,8 +1,8 @@
 import { deliveryOptions, getDeliveryOption } from "./deliveryOptions.js";
-import { calculateDate} from "./utils/date.js";
+import { calculateDate, calculateFormattedDate} from "./utils/date.js";
 import { loadCheckoutPage } from "../scripts/checkout.js";
 
-export function addToCart(productId, quantity) {
+export function addToCart(productId, quantity, exp_delivery_date) {
   const user = 'johndoe'; // need to use getItem
   fetch('http://localhost:3000/addToCart', {
       method: 'POST',
@@ -12,7 +12,8 @@ export function addToCart(productId, quantity) {
       body: JSON.stringify({
           productId: productId,
           user: user,
-          qty: quantity
+          qty: quantity,
+          exp_delivery_date: exp_delivery_date
       })
   })
   .then(response => response.json())
@@ -119,8 +120,9 @@ export function renderCart(CartItems, formatCurrency) {
     document.querySelectorAll('.js-delivery-option').forEach((element) => {
       element.addEventListener('click', () => {
         const productId = parseInt(element.getAttribute('data-product-id'));
-        const deliveryOptionId = parseInt(element.getAttribute('data-delivery-option-id'));        
-        updateCartDeliveryOption(productId, deliveryOptionId);
+        const deliveryOptionId = parseInt(element.getAttribute('data-delivery-option-id'));    
+        const exp_delivery_date = calculateFormattedDate(deliveryOptionId); 
+        updateCartDeliveryOption(productId, deliveryOptionId, exp_delivery_date);
       });
     });
 
@@ -212,7 +214,7 @@ export function renderCart(CartItems, formatCurrency) {
 
     
     
-    function updateCartDeliveryOption(productId, deliveryOptionId) {
+    function updateCartDeliveryOption(productId, deliveryOptionId, exp_delivery_date) {
       const user = 'johndoe';
       console.log(productId, deliveryOptionId);
       fetch('http://localhost:3000/updateDeliveryOption', {
@@ -223,7 +225,8 @@ export function renderCart(CartItems, formatCurrency) {
         body: JSON.stringify({
           productId: productId,
           user: user,
-          deliveryoptionid: deliveryOptionId
+          deliveryoptionid: deliveryOptionId,
+          exp_delivery_date: exp_delivery_date
         })
       })
       .then(response => response.json())
@@ -241,7 +244,7 @@ export function renderCart(CartItems, formatCurrency) {
   
 }
 
-export function fetchCart(userName, formatCurrency) {
+export function fetchCart(userName) {
     const promise = fetch(`http://localhost:3000/cart?user=${userName}`)
         .then(response => response.json())
         .then(data => {

@@ -33,7 +33,7 @@ app.get('/products', (req, res) => {
 
 // API route to place users cart
 app.post('/addToCart', (req, res) => {
-  const { productId, user, qty} = req.body;
+  const { productId, user, qty, exp_delivery_date} = req.body;
 
   // First, check if the product already exists in the cart for the user
   const selectQuery = `SELECT qty FROM cart WHERE pid = ? AND user_name = ?`;
@@ -66,9 +66,9 @@ app.post('/addToCart', (req, res) => {
       });
     } else {
       // Product doesn't exist, insert it into the cart
-      const insertQuery = `INSERT INTO cart (pid, user_name, qty) VALUES (?, ?, ?)`;
+      const insertQuery = `INSERT INTO cart (pid, user_name, qty, exp_delivery_date) VALUES (?, ?, ?, ?)`;
       
-      db.run(insertQuery, [productId, user, qty], function(err) {
+      db.run(insertQuery, [productId, user, qty, exp_delivery_date], function(err) {
         if (err) {
           res.status(400).json({ error: err.message });
           return;
@@ -79,7 +79,8 @@ app.post('/addToCart', (req, res) => {
           data: {
             productId: productId,
             user: user,
-            qty: qty
+            qty: qty,
+            exp_delivery_date: exp_delivery_date
           },
           id: this.lastID
         });
@@ -97,7 +98,7 @@ app.get('/cart', (req, res) => {
       return res.status(400).json({ error: 'User name is required' });
   }
 
-  const query = `SELECT cart.id, products.name, products.price, cart.qty ,products.image,cart.deliveryoptionid
+  const query = `SELECT cart.id, cart.pid,products.name, products.price, cart.qty ,products.image,cart.deliveryoptionid,cart.exp_delivery_date
                  FROM cart 
                  JOIN products ON cart.pid = products.id 
                  WHERE cart.user_name = ?`;
@@ -179,11 +180,11 @@ app.post('/cartupdatequantity', (req, res) => {
 
 //updates the delivery option
 app.post('/updateDeliveryOption', (req, res) => {
-  const { productId, user, deliveryoptionid } = req.body;
+  const { productId, user, deliveryoptionid, exp_delivery_date } = req.body;
 
-  const updateQuery = `UPDATE cart SET deliveryoptionid = ? WHERE id = ? AND user_name = ?`;
+  const updateQuery = `UPDATE cart SET deliveryoptionid = ?, exp_delivery_date = ? WHERE id = ? AND user_name = ?`;
 
-  db.run(updateQuery, [deliveryoptionid, productId, user], function(err) {
+  db.run(updateQuery, [deliveryoptionid, exp_delivery_date, productId, user], function(err) {
     if (err) {
       res.status(400).json({ error: err.message });
       return;
@@ -194,7 +195,8 @@ app.post('/updateDeliveryOption', (req, res) => {
       data: {
         pid: productId,
         user: user,
-        deliveryoptionid: deliveryoptionid
+        deliveryoptionid: deliveryoptionid,
+        exp_delivery_date: exp_delivery_date
       }
     });
   });
@@ -242,6 +244,59 @@ app.post('/updateCartQuantity', (req, res) => {
     });
   });
 });
+
+
+//Place your order
+app.post('/placeOrder', (req, res) => {
+  const { user, totalAmount, cartItems } = req.body;
+
+  // Insert the order into the orders table
+  const orderQuery = `
+      INSERT INTO orders (user_name, total_amount)
+      VALUES (?, ?);
+  `;
+
+  db.run(orderQuery, [user, totalAmount], function(err) {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      const orderId = this.lastID;
+
+      // Insert each item into the order_items table
+      const orderItemsQuery = `
+          INSERT INTO order_items (oid, pid, qty, arrival_date)
+          VALUES (?, ?, ?, ?);
+      `;
+
+      cartItems.forEach(item => {
+          db.run(orderItemsQuery, [orderId, item.pid, item.qty, item.exp_delivery_date], (err) => {
+              if (err) {
+                  return res.status(500).json({ error: err.message });
+              }
+          });
+      });
+
+      res.json({ message: 'Order placed successfully!', orderId: orderId });
+  });
+});
+
+app.post('/deleteCart', (req, res) => {
+  const { user } = req.body;
+
+  // Insert the order into the orders table
+  const deleteQuery = `
+      DELETE FROM cart where user_name=?;
+  `;
+
+  db.run(deleteQuery, [user], function(err) {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Cart deleted successfully!', user: user });
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {

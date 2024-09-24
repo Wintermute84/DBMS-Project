@@ -1,4 +1,5 @@
 import { calculateCartQuantity } from "./cart.js";
+import { calculateFormattedDate } from "./utils/date.js";
 
 export function renderProductsGrid(products, formatCurrency, addToCart){
   console.log(products);
@@ -86,7 +87,8 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
           let productId = details.productId;
           let quantity = details.quantity;
           console.log(productId,quantity);
-          addToCart(productId,quantity);
+          const exp_delivery_date = calculateFormattedDate('1');
+          addToCart(productId,quantity,exp_delivery_date);
         });
           
     });

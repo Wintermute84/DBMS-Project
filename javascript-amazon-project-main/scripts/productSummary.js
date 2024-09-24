@@ -3,6 +3,8 @@
  import { formatCurrency } from "../data/utils/money.js";
  import { addToCart, calculateCartQuantity } from "../data/cart.js";
 import { Product } from "../data/products.js";
+import { calculateDate } from "../data/utils/date.js";
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
 export let products =[];
 
@@ -54,3 +56,4 @@ async function loadPage() {
 }
 
 loadPage();
+
