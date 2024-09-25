@@ -42,4 +42,30 @@ export function calculateFormattedDate(deliveryOptionId){
   return formattedDate;
 }
 
+export function FormattedDate(){
+  const today = dayjs();
+  const formattedDate = today.format('DD-MM-YYYY');
+  return formattedDate;
+}
 
+
+export function OrderFormattedDate(orderDate){     //converts date in dd-mm-yyyy format to Month Month-day format
+  // Original date string in 'DD-MM-YYYY' format
+let dateStr = orderDate;
+
+// Split the date string into day, month, and year
+let [day, month, year] = dateStr.split('-');
+
+// Create a Date object (month is 0-indexed in JS, so subtract 1 from the month)
+let date = new Date(year, month - 1, day);
+
+// Options for formatting the date to 'Month Day' format
+let options = { month: 'long', day: 'numeric' };
+
+// Format the date
+let formattedDate = date.toLocaleDateString('en-US', options);
+
+console.log(formattedDate); // Outputs: 'September 25'
+
+return formattedDate;
+}

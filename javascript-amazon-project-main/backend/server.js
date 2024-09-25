@@ -248,15 +248,15 @@ app.post('/updateCartQuantity', (req, res) => {
 
 //Place your order
 app.post('/placeOrder', (req, res) => {
-  const { user, totalAmount, cartItems } = req.body;
+  const { user, totalAmount, cartItems, order_date } = req.body;
 
   // Insert the order into the orders table
   const orderQuery = `
-      INSERT INTO orders (user_name, total_amount)
-      VALUES (?, ?);
+      INSERT INTO orders (user_name, total_amount, order_date)
+      VALUES (?, ?, ?);
   `;
 
-  db.run(orderQuery, [user, totalAmount], function(err) {
+  db.run(orderQuery, [user, totalAmount, order_date], function(err) {
       if (err) {
           return res.status(500).json({ error: err.message });
       }
@@ -281,6 +281,7 @@ app.post('/placeOrder', (req, res) => {
   });
 });
 
+//delete the cartItems after placing the order
 app.post('/deleteCart', (req, res) => {
   const { user } = req.body;
 
@@ -294,6 +295,33 @@ app.post('/deleteCart', (req, res) => {
           return res.status(500).json({ error: err.message });
       }
       res.json({ message: 'Cart deleted successfully!', user: user });
+  });
+});
+
+
+//Fetching order details
+app.get('/fetchOrder', (req, res) => {
+  const { user } = req.query; // Get user_name
+
+  const query = `
+      SELECT o.id, o.user_name, o.order_date, o.total_amount, 
+             oi.pid, oi.qty, oi.arrival_date, 
+             p.name AS product_name, p.image AS product_image
+      FROM orders o
+      JOIN order_items oi ON o.id = oi.oid
+      JOIN products p ON oi.pid = p.id
+      WHERE o.user_name = ? order by o.id desc;
+  `;
+
+  db.all(query, [user], (err, rows) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      if (rows.length === 0) {
+          return res.status(404).json({ message: 'Order not found' });
+      }
+
+      res.json({ message: 'success', data: rows });
   });
 });
 

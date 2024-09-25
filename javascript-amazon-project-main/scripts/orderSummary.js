@@ -1,6 +1,6 @@
 import { getDeliveryOption } from "../data/deliveryOptions.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-
+import { FormattedDate } from "../data/utils/date.js";
 export function renderPaymentSummary(cart, formatCurrency){
   let productPriceCents = 0;
   let shippingCosts = 0;
@@ -56,12 +56,12 @@ export function renderPaymentSummary(cart, formatCurrency){
   .innerHTML = paymentSummaryHtml;
 
   document.querySelector('.js-place-order').addEventListener('click',()=>{
-    placeOrder('johndoe',totalCents,cart);
-    console.log(new Date());
+    const order_date = FormattedDate();
+    placeOrder('johndoe',totalCents,cart,order_date);
   });
 }
 
-function placeOrder(user,totalAmount,cart){
+function placeOrder(user,totalAmount,cart,order_date){
   fetch('http://localhost:3000/placeOrder', {
     method: 'POST',
     headers: {
@@ -71,6 +71,7 @@ function placeOrder(user,totalAmount,cart){
         user: user,
         totalAmount: totalAmount,
         cartItems: cart,
+        order_date:order_date
     })
 })
 .then(response => response.json())
@@ -106,22 +107,3 @@ function deleteCart(user){
 .catch(error => console.error('Error deleting cart:', error));
 }
 
-/*const dateString = '24-09-2024';
-
-// Split the string to get day, month, and year
-const [day, month] = dateString.split('-');
-
-// Create a Date object (month is 0-indexed, so subtract 1)
-const date = new Date( month - 1, day);
-
-// Check if the date is valid
-if (!isNaN(date.getTime())) {
-    // Get options for formatting
-    const options = { weekday: 'long', month: 'long', day: 'numeric' };
-    
-    // Format the date to "DayName daydate Month" (e.g., "Tuesday 24 September")
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    console.log(formattedDate); // Output: "Tuesday, September 24, 2024"
-} else {
-    console.log('Invalid date format');
-}*/
