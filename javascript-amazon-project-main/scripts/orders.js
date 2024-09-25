@@ -106,8 +106,8 @@ async function loadOrdersPage() {
     button.addEventListener('click',() => {
       const productId = parseInt(button.dataset.productId);
       const orderItemId = parseInt(button.dataset.orderItemId);
-      console.log(orderItemId,productId, calculateFormattedDate(1));
-      addToCart(productId,1,)
+     // console.log(orderItemId,productId, calculateFormattedDate(1));
+      addToCart(productId,1,calculateFormattedDate(1));
     });
     
   });

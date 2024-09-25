@@ -79,6 +79,7 @@ function placeOrder(user,totalAmount,cart,order_date){
     if (data.message === 'Order placed successfully!') {
         console.log(`Order placed! Order ID: ${data.orderId}`);
         deleteCart(user);
+        window.location.href = 'orders.html'; 
     } else {
         console.log('Failed to place order');
     }
