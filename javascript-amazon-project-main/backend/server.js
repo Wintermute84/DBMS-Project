@@ -305,7 +305,7 @@ app.get('/fetchOrder', (req, res) => {
 
   const query = `
       SELECT o.id, o.user_name, o.order_date, o.total_amount, 
-             oi.pid, oi.qty, oi.arrival_date, 
+             oi.pid, oi.qty, oi.arrival_date, oi.id AS order_item_id,
              p.name AS product_name, p.image AS product_image
       FROM orders o
       JOIN order_items oi ON o.id = oi.oid

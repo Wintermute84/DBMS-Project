@@ -1,6 +1,6 @@
-import { calculateDate, OrderFormattedDate } from "../data/utils/date.js";
+import { calculateDate, OrderFormattedDate, calculateFormattedDate} from "../data/utils/date.js";
 import formatCurrency from "../data/utils/money.js";
-import { calculateCartQuantity } from "../data/cart.js";
+import { addToCart, calculateCartQuantity } from "../data/cart.js";
 
 let orders = [];
 async function FetchOrders(){
@@ -42,7 +42,7 @@ async function loadOrdersPage() {
               <div class="product-quantity">
                 Quantity: ${order.qty}
               </div>
-              <button class="buy-again-button button-primary">
+              <button class="buy-again-button button-primary js-buy-again-button-${order.order_item_id}" data-product-id="${order.pid}" data-order-item-id="${order.order_item_id}">
                 <img class="buy-again-icon" src="images/icons/buy-again.png">
                 <span class="buy-again-message">Buy it again</span>
               </button>
@@ -66,6 +66,33 @@ async function loadOrdersPage() {
       </div>
       </div>
       ${renderOrderHtml(order)}
+      <div class="product-image-container">
+              <img src="${order.product_image}">
+            </div>
+            <div class="product-details">
+              <div class="product-name">
+                ${order.product_name}
+              </div>
+              <div class="product-delivery-date">
+               ${orderStatus}
+              </div>
+              <div class="product-quantity">
+                Quantity: ${order.qty}
+              </div>
+              <button class="buy-again-button button-primary js-buy-again-button-${order.order_item_id}" data-product-id="${order.pid}" data-order-item-id="${order.order_item_id}">
+                <img class="buy-again-icon" src="images/icons/buy-again.png">
+                <span class="buy-again-message">Buy it again</span>
+              </button>
+            </div>
+
+            <div class="product-actions">
+              <a href="tracking.html">
+                <button class="track-package-button button-secondary">
+                  Track package
+                </button>
+              </a>
+            </div>
+
       `;
     }
   }); 
@@ -75,6 +102,15 @@ async function loadOrdersPage() {
   `;
   document.querySelector('.js-orders-grid').innerHTML = orderHtml;
   calculateCartQuantity('johndoe');//need to add username
+  document.querySelectorAll('.buy-again-button').forEach((button) => {
+    button.addEventListener('click',() => {
+      const productId = parseInt(button.dataset.productId);
+      const orderItemId = parseInt(button.dataset.orderItemId);
+      console.log(orderItemId,productId, calculateFormattedDate(1));
+      addToCart(productId,1,)
+    });
+    
+  });
 }
 
 loadOrdersPage();
