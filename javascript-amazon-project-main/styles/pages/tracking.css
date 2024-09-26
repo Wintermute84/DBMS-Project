@@ -67,7 +67,6 @@
 .progress-bar-container {
   height: 25px;
   width: 100%;
-
   border: 1px solid rgb(200, 200, 200);
   border-radius: 50px;
   overflow: hidden;
@@ -75,7 +74,8 @@
 
 .progress-bar {
   height: 100%;
+  width:0;
   background-color: green;
   border-radius: 50px;
-  width: 50%;
+  transition: width 1s;
 }

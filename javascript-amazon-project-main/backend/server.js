@@ -31,6 +31,21 @@ app.get('/products', (req, res) => {
   });
 });
 
+// API route to get a products based on productId
+app.get('/getproduct', (req, res) => {
+  const {id} = req.query;
+  db.get('SELECT * FROM products where id = ?', [id], (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: row
+    });
+  });
+});
+
 // API route to place users cart
 app.post('/addToCart', (req, res) => {
   const { productId, user, qty, exp_delivery_date} = req.body;

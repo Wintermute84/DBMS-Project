@@ -1,4 +1,4 @@
-import { calculateDate, OrderFormattedDate, calculateFormattedDate, FormattedDate, calculateStatus} from "../data/utils/date.js";
+import { calculateDate, OrderFormattedDate, calculateFormattedDate, FormattedDate, calculateStatus, calculateDaysBetween} from "../data/utils/date.js";
 import formatCurrency from "../data/utils/money.js";
 import { addToCart, calculateCartQuantity } from "../data/cart.js";
 
@@ -49,8 +49,8 @@ async function loadOrdersPage() {
             </div>
 
             <div class="product-actions">
-              <a href="tracking.html">
-                <button class="track-package-button button-secondary">
+                <button class="track-package-button button-secondary js-track-package-button" 
+                data-arrival-date="${order.arrival_date}" data-order-placed-date="${order.order_date}" data-product-id="${order.pid}" data-order-status="${orderStatus}" data-qty="${order.qty}">
                   Track package
                 </button>
               </a>
@@ -86,8 +86,8 @@ async function loadOrdersPage() {
             </div>
 
             <div class="product-actions">
-              <a href="tracking.html">
-                <button class="track-package-button button-secondary">
+                <button class="track-package-button button-secondary js-track-package-button" data-arrival-date="${order.arrival_date}" 
+                data-product-id="${order.pid}" data-order-placed-date="${order.order_date}" data-order-status="${orderStatus}" data-qty="${order.qty}">
                   Track package
                 </button>
               </a>
@@ -105,9 +105,21 @@ async function loadOrdersPage() {
   document.querySelectorAll('.buy-again-button').forEach((button) => {
     button.addEventListener('click',() => {
       const productId = parseInt(button.dataset.productId);
-      const orderItemId = parseInt(button.dataset.orderItemId);
-     // console.log(orderItemId,productId, calculateFormattedDate(1));
       addToCart(productId,1,calculateFormattedDate(1));
+    });
+    
+  });
+
+  document.querySelectorAll('.js-track-package-button').forEach((button) => {
+    button.addEventListener('click',() => {
+      const deliveryDate = button.dataset.arrivalDate;
+      const productId = parseInt(button.dataset.productId);
+      const qty = parseInt(button.dataset.qty);
+      const status = button.dataset.orderStatus;
+      const orderDate = button.dataset.orderPlacedDate;
+      const width = calculateDaysBetween(deliveryDate,orderDate);
+      console.log(width,productId,status,qty);
+      window.location.href = `tracking.html?width=${width}&productId=${productId}&status=${status}&qty=${qty}`;
     });
     
   });

@@ -94,3 +94,20 @@ export function calculateStatus(arrivalDate){
         return 'Arrived on : ';
       } 
 }
+
+
+// Function to calculate the number of days between two dates
+export function calculateDaysBetween(arrival_date, order_date) {
+  const d1 = parseDate(arrival_date);
+  const d2 = parseDate(order_date);
+  const d3 = parseDate(FormattedDate());
+  // Get the difference in milliseconds
+  const diffTime1 = Math.abs(d1 - d2);
+  const diffTime2 = Math.abs(d3 - d2);
+  // Convert milliseconds to days
+  const diffDays1 = Math.ceil(diffTime1 / (1000 * 60 * 60 * 24));
+  const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24));
+  console.log(diffDays1,diffDays2,d1,d2,d3);
+
+  return ((diffDays2/diffDays1)*100);
+}
