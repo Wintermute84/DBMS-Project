@@ -1,4 +1,7 @@
+import { calculateCartQuantity } from "../data/cart.js";
+
 async function renderTrackingPage(){
+  calculateCartQuantity();
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const productId = urlParams.get('productId');
