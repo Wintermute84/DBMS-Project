@@ -69,3 +69,28 @@ console.log(formattedDate); // Outputs: 'September 25'
 
 return formattedDate;
 }
+
+
+//calculate product status
+// Function to convert 'dd-mm-yyyy' to a Date object
+export function parseDate(dateString) {
+  const [day, month, year] = dateString.split('-');
+  return new Date(year, month - 1, day); // Month is 0-indexed in JavaScript
+}
+
+export function calculateStatus(arrivalDate){
+      // Two date strings in 'dd-mm-yyyy' format
+      const date1 = arrivalDate;
+      const date2 = FormattedDate();
+
+      // Convert the date strings to Date objects
+      const d1 = parseDate(date1);
+      const d2 = parseDate(date2);
+
+      // Compare the dates
+      if (d1 > d2) {
+        return 'Delivering on : ';
+      } else{
+        return 'Arrived on : ';
+      } 
+}

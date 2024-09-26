@@ -1,4 +1,4 @@
-import { calculateDate, OrderFormattedDate, calculateFormattedDate} from "../data/utils/date.js";
+import { calculateDate, OrderFormattedDate, calculateFormattedDate, FormattedDate, calculateStatus} from "../data/utils/date.js";
 import formatCurrency from "../data/utils/money.js";
 import { addToCart, calculateCartQuantity } from "../data/cart.js";
 
@@ -24,8 +24,8 @@ async function loadOrdersPage() {
   let orderId = orders[0].id;
   orderHtml += renderOrderHtml(firstOrder);
   orders.forEach((order)=>{
-    const orderStatus = (order.arrival_date >= order.order_date)  ? `Delivered on : ${OrderFormattedDate(order.arrival_date)}`
-          : `Arriving on : ${OrderFormattedDate(order.arrival_date)}`;
+    const status = calculateStatus(order.arrival_date);
+    const orderStatus = `${status} ${OrderFormattedDate(order.arrival_date)}`;
     console.log(order);
     if(order.id === orderId){
       orderHtml += `
