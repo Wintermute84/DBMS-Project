@@ -357,6 +357,23 @@ app.get('/getSellerProducts', (req, res) => {
   });
 });
 
+
+//app route to add a new product to product table
+app.post('/addProduct', (req, res) => {
+  const { sellerName,price,productName,image } = req.body;
+
+  // Insert the order into the orders table
+  const addQuery = `
+      INSERT INTO products (name, price, seller, image) VALUES (?,?,?,?);
+  `;
+
+  db.run(addQuery, [productName, price, sellerName, image], function(err) {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Product added successfully!' });
+  });
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

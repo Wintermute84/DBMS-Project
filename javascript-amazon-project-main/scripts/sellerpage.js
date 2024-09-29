@@ -65,3 +65,38 @@ document.querySelector('.add-icon').addEventListener('click', ()=>{
         document.querySelector('.modal').classList.remove('open');
     });
 });
+
+
+document.getElementById('submit').addEventListener('submit', (event) =>{
+  event.preventDefault(); // Prevent page from refreshing
+  const productName = document.getElementById('productname').value;
+  const price = parseInt(document.getElementById('price').value);
+  const image = document.getElementById('image-link').value;
+  const sellerName = 'midhun';    //need to load seller name from local storage
+  addProduct(sellerName,productName,price,image);
+  document.querySelector('.modal').classList.remove('open');
+});
+
+function addProduct(sellerName, productName, price ,image){
+  fetch('http://localhost:3000/addProduct', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        sellerName: sellerName,
+        price: price,
+        image: image,
+        productName:productName
+    })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.message === 'Order placed successfully!') {
+        console.log(`Product Added!`);
+    } else {
+        console.log('Failed to add product');
+    }
+})
+.catch(error => console.error('Error adding product:', error));
+}
