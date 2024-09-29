@@ -163,3 +163,18 @@
 .added-to-cart-visible{
   opacity:1;
 }
+
+.add-icon{
+  width:20%;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.empty-product-list{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25%;
+  margin-bottom:20%;
+  font-size: larger;
+}

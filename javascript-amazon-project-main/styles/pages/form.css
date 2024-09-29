@@ -1,0 +1,52 @@
+form{
+  display:flex;
+  flex-direction: column;
+  width:100%;
+  margin-left: 25%;
+  margin-right: 50%;
+  color:rgb(0, 0, 0);
+}
+
+label, input{
+  margin-bottom: 20px;
+  width:45%;
+}
+
+h2{
+  text-align: center;
+}
+
+.submit-button{
+  margin-top: 10px;
+}
+
+.modal{
+  border: 1px solid;
+  border-radius: 8px;
+  width: 50%;
+  opacity: 0;
+  margin: 0 auto;
+  position: fixed;
+  top:10%;
+  bottom: 10%;
+  left: 0;
+  right: 0;
+  transition: all 0.3s ease-in-out;
+  z-index: -1;
+  background-color: rgba(255, 255, 255, 0.9);
+
+}
+
+.modal.open{
+  opacity: 1;
+  z-index: 99999;
+}
+
+.close-button{
+  text-align: right;
+}
+
+.close-button-image{
+  width: 30px;
+  cursor: pointer;
+}

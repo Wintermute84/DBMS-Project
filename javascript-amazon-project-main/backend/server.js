@@ -31,7 +31,7 @@ app.get('/products', (req, res) => {
   });
 });
 
-// API route to get a products based on productId
+// API route to get a product based on productId
 app.get('/getproduct', (req, res) => {
   const {id} = req.query;
   db.get('SELECT * FROM products where id = ?', [id], (err, row) => {
@@ -340,6 +340,22 @@ app.get('/fetchOrder', (req, res) => {
   });
 });
 
+
+
+//api route to get products of a particular seller
+app.get('/getSellerProducts', (req, res) => {
+  const {sellerId} = req.query;
+  db.all('SELECT * FROM products where seller = ?', [sellerId], (err, rows) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+    res.json({
+      message: "success",
+      data: rows
+    });
+  });
+});
 
 // Start the server
 app.listen(port, () => {
