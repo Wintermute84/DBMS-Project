@@ -5,6 +5,7 @@
 
   margin-top: 140px;
   margin-bottom: 100px;
+  font-family: "Afacad Flux", sans-serif;
 
   /* margin-left: auto;
      margin-right auto;
@@ -47,6 +48,7 @@
   border: 1px solid rgb(222, 222, 222);
   border-radius: 4px;
   padding: 18px;
+  background-color: #FFF4EA;;
 }
 
 .cart-item-container {
@@ -71,7 +73,7 @@
 .delivery-date {
   color: rgb(0, 118, 0);
   font-weight: 700;
-  font-size: 19px;
+  font-size: 22px;
   margin-top: 5px;
   margin-bottom: 22px;
 }
@@ -106,6 +108,7 @@
 
 .product-name {
   font-weight: 700;
+  font-size: 20px;
   margin-bottom: 8px;
 }
 
@@ -113,6 +116,7 @@
   color: rgb(177, 39, 4);
   font-weight: 700;
   margin-bottom: 5px;
+  font-size: 20px;
 }
 
 .product-quantity .link-primary {
@@ -153,6 +157,7 @@
 .delivery-options-title {
   font-weight: 700;
   margin-bottom: 10px;
+  font-size: 20px;
 }
 
 .delivery-option {
@@ -165,22 +170,24 @@
 .delivery-option-input {
   margin-left: 0px;
   cursor: pointer;
+  accent-color :  #872341;
 }
 
 .delivery-option-date {
   color: rgb(0, 118, 0);
   font-weight: 500;
   margin-bottom: 3px;
+  font-size: 20px;
 }
 
 .delivery-option-price {
   color: rgb(120, 120, 120);
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .payment-summary-title {
   font-weight: 700;
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 12px;
 }
 
@@ -191,7 +198,7 @@
      The 1st column will take up the remaining space. */
   grid-template-columns: 1fr auto;
 
-  font-size: 15px;
+  font-size: 18px;
   margin-bottom: 9px;
 }
 

@@ -2,6 +2,9 @@
   margin-top: 60px;
 }
 
+body{
+  background-color: #FFF4EA;
+}
 .products-grid {
   display: grid;
 
@@ -70,7 +73,7 @@
   padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
-
+  background-color: #FFF4EA;
   border-right: 1px solid rgb(231, 231, 231);
   border-bottom: 1px solid rgb(231, 231, 231);
 
@@ -82,7 +85,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+  
   height: 180px;
   margin-bottom: 20px;
 }
@@ -157,7 +160,7 @@
 .add-to-cart-button {
   width: 100%;
   padding: 8px;
-  border-radius: 50px;
+  border-radius: 4px;
 }
 
 .added-to-cart-visible{

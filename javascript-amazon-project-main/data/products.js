@@ -59,7 +59,8 @@ export function renderProductsGrid(products, formatCurrency, addToCart){
   document.querySelectorAll('.js-add-to-cart')
     .forEach((button)=>{
       let addedMessageTimeoutId;
-      button.addEventListener('click', () => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
         new Promise((resolve) => {
           const productId = parseInt(button.dataset.productId);
           const quantity = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value);

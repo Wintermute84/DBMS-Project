@@ -1,7 +1,7 @@
 import { calculateCartQuantity } from "../data/cart.js";
-
+const userName = localStorage.getItem('userName');
 async function renderTrackingPage(){
-  calculateCartQuantity();
+  calculateCartQuantity(userName);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const productId = urlParams.get('productId');

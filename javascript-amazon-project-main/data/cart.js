@@ -1,9 +1,9 @@
 import { deliveryOptions, getDeliveryOption } from "./deliveryOptions.js";
 import { calculateDate, calculateFormattedDate} from "./utils/date.js";
 import { loadCheckoutPage } from "../scripts/checkout.js";
-
+const userName = localStorage.getItem('userName');
 export function addToCart(productId, quantity, exp_delivery_date) {
-  const user = 'johndoe'; // need to use getItem
+  
   fetch('http://localhost:3000/addToCart', {
       method: 'POST',
       headers: {
@@ -11,7 +11,7 @@ export function addToCart(productId, quantity, exp_delivery_date) {
       },
       body: JSON.stringify({
           productId: productId,
-          user: user,
+          user: userName,
           qty: quantity,
           exp_delivery_date: exp_delivery_date
       })
@@ -164,7 +164,6 @@ export function renderCart(CartItems, formatCurrency) {
       }); 
 
     function deleteCartItem(cartId) { //need to add username
-      const user = 'johndoe';
       fetch('http://localhost:3000/deleteCartItem', {
         method: 'POST',
         headers: {
@@ -172,7 +171,7 @@ export function renderCart(CartItems, formatCurrency) {
         },
         body: JSON.stringify({
           id: cartId,
-          user: user,
+          user: userName,
         })
       })
       .then(response => response.json())
@@ -188,7 +187,6 @@ export function renderCart(CartItems, formatCurrency) {
     }
 
     function updateCartQuantity(cartId, quantity) { //need to add username
-      const user = 'johndoe';
       fetch('http://localhost:3000/updateCartQuantity', {
         method: 'POST',
         headers: {
@@ -196,7 +194,7 @@ export function renderCart(CartItems, formatCurrency) {
         },
         body: JSON.stringify({
           id: cartId,
-          user: user,
+          user: userName,
           quantity: quantity
         })
       })
@@ -215,7 +213,6 @@ export function renderCart(CartItems, formatCurrency) {
     
     
     function updateCartDeliveryOption(productId, deliveryOptionId, exp_delivery_date) {
-      const user = 'johndoe';
       console.log(productId, deliveryOptionId);
       fetch('http://localhost:3000/updateDeliveryOption', {
         method: 'POST',
@@ -224,7 +221,7 @@ export function renderCart(CartItems, formatCurrency) {
         },
         body: JSON.stringify({
           productId: productId,
-          user: user,
+          user: userName,
           deliveryoptionid: deliveryOptionId,
           exp_delivery_date: exp_delivery_date
         })
@@ -286,7 +283,6 @@ export function calculateCartQuantity(userName){
 }
 
 export function updateCartQuantityExistingProduct(productId, quantity){
-  const user = 'johndoe'; // need to use getItem
   fetch('http://localhost:3000/cartupdatequantity', {
       method: 'POST',
       headers: {
@@ -294,7 +290,7 @@ export function updateCartQuantityExistingProduct(productId, quantity){
       },
       body: JSON.stringify({
           productId: productId,
-          user: user,
+          user: userName,
           qty: quantity
       })
   })

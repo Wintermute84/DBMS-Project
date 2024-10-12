@@ -1,7 +1,8 @@
 import formatCurrency from "../data/utils/money.js";
-
+const sellerName = localStorage.getItem('sellerName');
 async function loadSellerPage(){
-  const sellerProducts = await fetchSellerProducts('midhun');
+  console.log(sellerName);
+  const sellerProducts = await fetchSellerProducts(sellerName);
   const productHtml = renderSellerProductsGrid(sellerProducts);
   document.querySelector('.js-products-grid').innerHTML = productHtml;
 }
@@ -72,7 +73,6 @@ document.getElementById('submit').addEventListener('submit', (event) =>{
   const productName = document.getElementById('productname').value;
   const price = parseInt(document.getElementById('price').value);
   const image = document.getElementById('image-link').value;
-  const sellerName = 'midhun';    //need to load seller name from local storage
   addProduct(sellerName,productName,price,image);
   document.querySelector('.modal').classList.remove('open');
 });

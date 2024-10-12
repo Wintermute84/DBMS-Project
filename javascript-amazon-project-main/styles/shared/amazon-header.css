@@ -1,5 +1,5 @@
 .amazon-header {
-  background-color: rgb(19, 25, 33);
+  background-color: #000000;
   color: white;
   padding-left: 15px;
   padding-right: 15px;
@@ -7,12 +7,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  overflow: hidden;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 70px;
 }
 
 .amazon-header-left-section {
@@ -39,10 +39,14 @@
 }
 
 .amazon-logo {
-  width: 100px;
+  width: 115px;
+  height: 70px;
   margin-top: 5px;
 }
 
+.logout-icon{
+  width: 40px;
+}
 .amazon-mobile-logo {
   display: none;
 }
@@ -62,7 +66,7 @@
 .amazon-header-middle-section {
   flex: 1;
   max-width: 850px;
-  margin-left: 10px;
+  margin-left: 505px;
   margin-right: 10px;
   display: flex;
 }
@@ -126,7 +130,7 @@
 }
 
 .cart-icon {
-  width: 50px;
+  width: 80px;
 }
 
 .cart-text {
@@ -136,14 +140,13 @@
 }
 
 .cart-quantity {
-  color: rgb(240, 136, 4);
+  color: #fff;
   font-size: 16px;
   font-weight: 700;
 
   position: absolute;
-  top: 4px;
-  left: 22px;
-  
+  left: 35px;
+  bottom: 69px;
   width: 26px;
   text-align: center;
 }

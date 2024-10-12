@@ -7,7 +7,7 @@ import { calculateDate } from "../data/utils/date.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
 export let products =[];
-
+const userName = localStorage.getItem('userName');
  export function fetchProducts() {
     const promise = fetch('http://localhost:3000/products') // Make a request to the backend
       .then(response => response.json())  // Parse the response as JSON
@@ -49,7 +49,7 @@ async function loadPage() {
         await fetchProducts();
         console.log(products);
         renderProductsGrid(products, formatCurrency, addToCart); 
-        calculateCartQuantity('johndoe');
+        calculateCartQuantity(userName);
     } catch(error){
         console.log(error);
     }

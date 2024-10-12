@@ -16,7 +16,7 @@ const db = new sqlite3.Database('./database.db', (err) => {
   }
   console.log('Connected to the SQLite database.');
 });
-
+ 
 // API route to get all products
 app.get('/products', (req, res) => {
   db.all('SELECT * FROM products', [], (err, rows) => {
@@ -374,6 +374,93 @@ app.post('/addProduct', (req, res) => {
       res.json({ message: 'Product added successfully!' });
   });
 });
+
+app.get('/userLogin', (req, res) => {
+  const { userName, password } = req.query;
+
+  db.get('SELECT * FROM users WHERE username = ? and password = ?', [userName, password], (err, row) => {
+    if (err) {
+      // Respond with error message
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    if (!row) {
+      // Handle case where no user is found
+      res.json({
+        message: "User not found",
+        data: null
+      });
+    } else {
+      // Respond with user data
+      res.json({
+        message: "success",
+        data: row
+      });
+    }
+  });
+});
+
+app.get('/sellerLogin', (req, res) => {
+  const { sellerName, password } = req.query;
+
+  db.get('SELECT * FROM seller WHERE sellername = ? and password = ?', [sellerName, password], (err, row) => {
+    if (err) {
+      // Respond with error message
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    if (!row) {
+      // Handle case where no seller is found
+      res.json({
+        message: "User not found",
+        data: null
+      });
+    } else {
+      // Respond with seller data
+      res.json({
+        message: "success",
+        data: row
+      });
+    }
+  });
+});
+
+
+app.post('/addSeller', (req, res) => {
+  const { sellerName,password } = req.body;
+
+  // Insert the order into the orders table
+  const addQuery = `
+      INSERT INTO seller (sellername, password) VALUES (?,?);
+  `;
+
+  db.run(addQuery, [sellerName, password], function(err) {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Seller added successfully!' });
+  });
+});
+
+app.post('/addUser', (req, res) => {
+  const { userName,password } = req.body;
+
+  // Insert the order into the orders table
+  const addQuery = `
+      INSERT INTO users (username, password) VALUES (?,?);
+  `;
+
+  db.run(addQuery, [userName, password], function(err) {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'User added successfully!' });
+  });
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

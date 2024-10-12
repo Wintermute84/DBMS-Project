@@ -1,6 +1,7 @@
 import { getDeliveryOption } from "../data/deliveryOptions.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { FormattedDate } from "../data/utils/date.js";
+const userName = localStorage.getItem('userName');
 export function renderPaymentSummary(cart, formatCurrency){
   let productPriceCents = 0;
   let shippingCosts = 0;
@@ -57,7 +58,7 @@ export function renderPaymentSummary(cart, formatCurrency){
 
   document.querySelector('.js-place-order').addEventListener('click',()=>{
     const order_date = FormattedDate();
-    placeOrder('johndoe',totalCents,cart,order_date);
+    placeOrder(userName,totalCents,cart,order_date);
   });
 }
 

@@ -1,10 +1,10 @@
 import { calculateDate, OrderFormattedDate, calculateFormattedDate, FormattedDate, calculateStatus, calculateDaysBetween} from "../data/utils/date.js";
 import formatCurrency from "../data/utils/money.js";
 import { addToCart, calculateCartQuantity } from "../data/cart.js";
-
+const userName = localStorage.getItem('userName');
 let orders = [];
 async function FetchOrders(){
-  const promise = await fetch('http://localhost:3000/fetchOrder?user=johndoe')
+  const promise = await fetch(`http://localhost:3000/fetchOrder?user=${userName}`)
     .then(response => response.json())
     .then(data => {
         if (data.message === 'success') {
@@ -101,7 +101,7 @@ async function loadOrdersPage() {
     </div>
   `;
   document.querySelector('.js-orders-grid').innerHTML = orderHtml;
-  calculateCartQuantity('johndoe');//need to add username
+  calculateCartQuantity(userName);//need to add username
   document.querySelectorAll('.buy-again-button').forEach((button) => {
     button.addEventListener('click',() => {
       const productId = parseInt(button.dataset.productId);

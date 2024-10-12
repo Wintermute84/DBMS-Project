@@ -4,13 +4,17 @@
   margin-bottom: 100px;
   padding-left: 20px;
   padding-right: 20px;
-
+  
   /* margin-left: auto;
      margin-right auto;
      Is a trick for centering an element horizontally
      without needing a container. */
   margin-left: auto;
   margin-right: auto;
+}
+
+body{
+  background-color: #ffffff;
 }
 
 .page-title {
@@ -23,12 +27,14 @@
   display: grid;
   grid-template-columns: 1fr;
   row-gap: 50px;
+
 }
 
 .order-header {
-  background-color: rgb(240, 242, 242);
+  background-color: #383636;
+  font-weight: 600;
   border: 1px solid rgb(213, 217, 217);
-
+  color:white;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,7 +97,7 @@
   border-top: none;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-
+  background-color: #FFF4EA;;
   display: grid;
   grid-template-columns: 110px 1fr 220px;
   column-gap: 35px;
@@ -159,6 +165,8 @@
   width: 100%;
   font-size: 15px;
   padding: 8px;
+  background-color:  #872341;
+  color: white;
 }
 
 @media (max-width: 800px) {
