@@ -17,7 +17,7 @@ document.querySelector('.js-user-login-button').addEventListener('click', async 
     const userName = document.querySelector('.js-user-name').value;
     const password = document.querySelector('.js-user-password').value;
     console.log(userName);
-    let promise = await fetch(`https://dbms-project-gilt-zeta.vercel.app/userlogin?userName=${userName}&password=${password}`)
+    let promise = await fetch(`https://dbms-project-gilt-zeta.vercel.app/api/userlogin?userName=${userName}&password=${password}`)
       .then(response => response.json())
       .then(data => {
           if (data.message === 'success') {
@@ -38,7 +38,7 @@ document.querySelector('.js-user-login-button').addEventListener('click', async 
         const sellerName = document.querySelector('.js-seller-name').value;
         const password = document.querySelector('.js-seller-password').value;
         console.log(sellerName);
-        let promise = await fetch(`https://dbms-project-gilt-zeta.vercel.app/sellerLogin?sellerName=${sellerName}&password=${password}`)
+        let promise = await fetch(`https://dbms-project-gilt-zeta.vercel.app/api/sellerLogin?sellerName=${sellerName}&password=${password}`)
           .then(response => response.json())
           .then(data => {
               if (data.message === 'success') {
