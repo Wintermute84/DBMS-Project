@@ -23,7 +23,7 @@ document.querySelector('.js-user-login-button').addEventListener('click', async 
           if (data.message === 'success') {
               console.log(data);
               localStorage.setItem('userName',userName);
-              window.location.href = '../amazon.html'; 
+              window.location.href = 'amazon.html'; 
           } else {
             alert('Invalid Username/Password');
           }
@@ -44,7 +44,7 @@ document.querySelector('.js-user-login-button').addEventListener('click', async 
               if (data.message === 'success') {
                   console.log(data);
                   localStorage.setItem('sellerName',sellerName);
-                  window.location.href = '../sellerpage.html'; 
+                  window.location.href = 'sellerpage.html'; 
               } else {
                 alert('Invalid Username/Password');
               }
