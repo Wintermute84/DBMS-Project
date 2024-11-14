@@ -17,7 +17,7 @@ document.querySelector('.js-create-new-user-button').addEventListener('click',as
 
 
 function addUser(userName,password){
-  fetch('http://localhost:3000/addUser', {
+  fetch('https://dbms-project-gilt-zeta.vercel.app/addUser', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
