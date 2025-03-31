@@ -17,7 +17,7 @@ document.querySelector('.js-create-new-user-button').addEventListener('click',as
 
 
 function addUser(userName,password){
-  fetch('https://dbms-project-gilt-zeta.vercel.app/addUser', {
+  fetch('http://localhost:3000/addUser', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ function addUser(userName,password){
     if (data.message === 'User added successfully!') {
         console.log(`User Added!`);
         localStorage.setItem('userName',userName)
-        window.location.href = 'amazon.html'; 
+        window.location.href = '../amazon.html'; 
     } else {
         alert('Failed to add user');
     }

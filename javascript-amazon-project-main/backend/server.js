@@ -9,10 +9,8 @@ app.use(express.json());
 // Use CORS to allow requests from different origins
 app.use(cors());
 
-
-
 // Connect to the SQLite database
-const db = new sqlite3.Database('database.db', (err) => {
+const db = new sqlite3.Database('./database.db', (err) => {
   if (err) {
     console.error(err.message);
   }

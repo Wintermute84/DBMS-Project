@@ -27,7 +27,7 @@ function addSeller(sellerName,password){
     if (data.message === 'Seller added successfully!') {
         console.log(`Seller Added!`);
         localStorage.setItem('sellerName',sellerName)
-        window.location.href = 'sellerpage.html'; 
+        window.location.href = '../sellerpage.html'; 
     } else {
         alert('Failed to add seller');
     }
